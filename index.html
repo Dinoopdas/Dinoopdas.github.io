@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dinoop Das — Robotics Engineer</title>
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg-2: #11151a;
+    --bg-3: #171c23;
+    --border: #232a33;
+    --text: #e6eaf0;
+    --muted: #8b95a3;
+    --dim: #5a6473;
+    --accent: #ff9f1c;
+    --accent-dim: #b8721a;
+    --accent-glow: rgba(255,159,28,0.12);
+    --nav-bg: rgba(10,12,15,0.7);
+    --grid-line: #232a33;
+  }
+  [data-theme="light"] {
+    --bg: #f7f5f0;
+    --bg-2: #ffffff;
+    --bg-3: #efece4;
+    --border: #ddd8cc;
+    --text: #1a1d23;
+    --muted: #5a6068;
+    --dim: #8a8f98;
+    --accent: #d97706;
+    --accent-dim: #b45f06;
+    --accent-glow: rgba(217,119,6,0.1);
+    --nav-bg: rgba(247,245,240,0.75);
+    --grid-line: #e4e0d6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    overflow-x: hidden;
+    transition: background .35s, color .35s;
+  }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 80%);
+    transition: opacity .35s;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 6vw;
+    backdrop-filter: blur(12px);
+    background: var(--nav-bg);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s, padding .3s, background .35s;
+  }
+  nav.scrolled { border-color: var(--border); padding: 12px 6vw; }
+  .logo { font-weight: 700; letter-spacing: -0.02em; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .logo .dot { width: 9px; height: 9px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 12px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  .nav-right { display: flex; align-items: center; gap: 28px; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .theme-btn {
+    background: var(--bg-2); border: 1px solid var(--border); color: var(--text);
+    width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center; transition: all .25s;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-toggle { display: none; background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; }
+
+  main { position: relative; z-index: 1; }
+  section { padding: 110px 6vw; max-width: 1100px; margin: 0 auto; }
+
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding-top: 80px; max-width: 1100px; margin: 0 auto; padding-left: 6vw; padding-right: 6vw;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent);
+    background: var(--accent-glow); border: 1px solid var(--accent-dim);
+    padding: 6px 14px; border-radius: 100px; margin-bottom: 28px;
+  }
+  .hero-tag .live { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: pulse 1.5s infinite; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 7vw, 5.2rem); font-weight: 800; letter-spacing: -0.04em;
+    line-height: 1.02; margin-bottom: 22px;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero .sub {
+    font-size: clamp(1.05rem, 2.2vw, 1.45rem); color: var(--muted); max-width: 640px;
+    margin-bottom: 38px; font-weight: 400;
+  }
+  .hero .sub .hl { color: var(--text); font-weight: 500; }
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    padding: 13px 26px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    text-decoration: none; cursor: pointer; transition: all .2s; display: inline-flex;
+    align-items: center; gap: 9px; border: 1px solid transparent; font-family: inherit;
+  }
+  .btn-primary { background: var(--accent); color: var(--bg); }
+  .btn-primary:hover { box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-2px); }
+  .btn-ghost { border-color: var(--border); color: var(--text); background: transparent; }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-stats { display: flex; gap: 48px; margin-top: 72px; flex-wrap: wrap; }
+  .hero-stat .num { font-size: 2rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+  .hero-stat .lbl { font-size: 13px; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+
+  .sec-head { margin-bottom: 56px; }
+  .sec-num { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 14px; }
+  .sec-head h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; margin-top: 6px; }
+  .sec-head .line { width: 60px; height: 3px; background: var(--accent); margin-top: 18px; border-radius: 2px; }
+
+  .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: start; }
+  .about-text p { color: var(--muted); margin-bottom: 18px; font-size: 1.05rem; }
+  .about-text .hl { color: var(--text); }
+  .about-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+  .about-card h3 { font-size: 14px; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .info-row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .info-row:last-child { border: none; }
+  .info-row .k { color: var(--dim); }
+  .info-row .v { color: var(--text); font-weight: 500; text-align: right; }
+
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+  .skill-cat { background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 26px; transition: all .25s; }
+  .skill-cat:hover { border-color: var(--accent-dim); transform: translateY(-3px); }
+  .skill-cat .icon { font-size: 26px; margin-bottom: 14px; color: var(--accent); }
+  .skill-cat h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-size: 12.5px; font-family: 'JetBrains Mono', monospace; padding: 5px 11px;
+    background: var(--bg-3); border: 1px solid var(--border); border-radius: 7px; color: var(--muted); transition: all .2s;
+  }
+  .skill-cat:hover .chip { border-color: var(--accent-dim); color: var(--text); }
+
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .tl-item { position: relative; padding-bottom: 44px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before { content: ''; position: absolute; left: -32px; top: 6px; width: 14px; height: 14px; background: var(--bg); border: 3px solid var(--accent); border-radius: 50%; }
+  .tl-item .date { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); margin-bottom: 6px; }
+  .tl-item h3 { font-size: 1.25rem; font-weight: 700; }
+  .tl-item .org { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
+  .tl-item .org .at { color: var(--accent); }
+  .tl-item p { color: var(--dim); font-size: 14.5px; }
+
+  .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; }
+  .proj-card {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
+    transition: all .3s; position: relative; overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
+  }
+  .proj-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  .proj-card:hover { border-color: var(--accent-dim); transform: translateY(-4px); }
+  .proj-card:hover::before { transform: scaleX(1); }
+  .proj-card .ptop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .proj-card .picon { font-size: 28px; color: var(--accent); }
+  .proj-card .plink { color: var(--dim); text-decoration: none; font-size: 20px; transition: color .2s; }
+  .proj-card .plink:hover { color: var(--accent); }
+  .proj-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
+  .proj-card .pdesc { color: var(--muted); font-size: 14.5px; margin-bottom: 18px; flex-grow: 1; }
+  .proj-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+  .proj-tags .chip { background: transparent; }
+  .proj-more { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); display: flex; align-items: center; gap: 6px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center;
+    padding: 24px; opacity: 0; pointer-events: none; transition: opacity .25s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 18px;
+    max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 36px;
+    transform: translateY(20px) scale(0.98); transition: transform .25s;
+  }
+  .modal-overlay.open .modal { transform: none; }
+  .modal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .modal-icon { font-size: 40px; color: var(--accent); }
+  .modal-close { background: var(--bg-3); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 9px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+  .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+  .modal h3 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .modal .m-role { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); margin-bottom: 20px; }
+  .modal .m-body { color: var(--muted); font-size: 15px; margin-bottom: 16px; }
+  .modal h4 { font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--dim); text-transform: uppercase; letter-spacing: 0.05em; margin: 22px 0 12px; }
+  .modal ul { list-style: none; }
+  .modal ul li { color: var(--muted); font-size: 14.5px; padding: 7px 0 7px 22px; position: relative; }
+  .modal ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
+  .modal-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; padding: 11px 20px; background: var(--accent); color: var(--bg); border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all .2s; }
+  .modal-link:hover { box-shadow: 0 0 24px var(--accent-glow); transform: translateY(-2px); }
+
+  .contact { text-align: center; padding-bottom: 60px; }
+  .contact h2 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 18px; }
+  .contact h2 .accent { color: var(--accent); }
+  .contact p { color: var(--muted); max-width: 520px; margin: 0 auto 38px; font-size: 1.1rem; }
+  .contact-links { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+  .clink { display: flex; align-items: center; gap: 10px; padding: 14px 24px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); text-decoration: none; font-weight: 500; transition: all .25s; cursor: pointer; font-family: inherit; font-size: 15px; }
+  .clink:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+  .clink i { font-size: 20px; }
+
+  footer { text-align: center; padding: 40px 6vw; border-top: 1px solid var(--border); color: var(--dim); font-size: 13.5px; font-family: 'JetBrains Mono', monospace; }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s, transform .7s; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    .nav-links { position: fixed; top: 60px; right: 0; flex-direction: column; background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 28px; gap: 18px; transform: translateX(120%); transition: transform .3s; }
+    .nav-links.open { transform: none; }
+    .nav-toggle { display: block; }
+    .about-grid { grid-template-columns: 1fr; }
+    section { padding: 80px 6vw; }
+    .hero-stats { gap: 32px; }
+    .modal { padding: 28px 22px; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.30.0/tabler-icons.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav id="nav">
+  <div class="logo"><span class="dot"></span>Dinoop Das</div>
+  <div class="nav-right">
+    <div class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle theme"><i class="ti ti-sun"></i></button>
+    <button class="nav-toggle" id="navToggle"><i class="ti ti-menu-2"></i></button>
+  </div>
+</nav>
+
+<main>
+  <header class="hero">
+    <span class="hero-tag"><span class="live"></span>Available for robotics R&D roles</span>
+    <h1>Robotics engineer<br>building the bridge between<br><span class="accent">hardware &amp; intelligence</span>.</h1>
+    <p class="sub">I design and deploy <span class="hl">ROS 2 systems, computer-vision pipelines, and industrial robot integrations</span> — from neural-net perception to live cobot control on the factory floor.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View my work <i class="ti ti-arrow-right"></i></a>
+      <button class="btn btn-ghost" id="resumeBtn"><i class="ti ti-download"></i> Download resume</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">5+</div><div class="lbl">years in robotics</div></div>
+      <div class="hero-stat"><div class="num">ROS 2</div><div class="lbl">core stack</div></div>
+      <div class="hero-stat"><div class="num">M.Tech</div><div class="lbl">in robotics</div></div>
+    </div>
+  </header>
+
+  <section id="about" class="reveal">
+    <div class="sec-head"><span class="sec-num">01 / about</span><h2>Who I am</h2><div class="line"></div></div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm a <span class="hl">robotics engineer based in Abu Dhabi</span>, with roots in Kerala, India. I work where mechanical hardware meets machine intelligence — currently building an AI-powered robotic refuelling system, one of the first certified deployments of its kind in the region.</p>
+        <p>My day-to-day spans <span class="hl">training neural networks for perception, integrating depth and vision sensors, and orchestrating industrial robot arms</span> through ROS 2. I care about systems that actually run in production, not just in simulation.</p>
+        <p>I learn by building. Whether it's writing a camera driver from scratch in C++ or migrating a legacy ROS 1 stack, I'd rather understand a system to its core than treat it as a black box.</p>
+      </div>
+      <div class="about-card">
+        <h3>// quick_facts</h3>
+        <div class="info-row"><span class="k">Location</span><span class="v">Abu Dhabi, UAE</span></div>
+        <div class="info-row"><span class="k">Role</span><span class="v">Robotics Engineer</span></div>
+        <div class="info-row"><span class="k">Focus</span><span class="v">ROS 2 · CV · Cobots</span></div>
+        <div class="info-row"><span class="k">Languages</span><span class="v">C++ · Python</span></div>
+        <div class="info-row"><span class="k">Open to</span><span class="v">R&D · Freelance</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="reveal">
+    <div class="sec-head"><span class="sec-num">02 / skills</span><h2>Technical stack</h2><div class="line"></div></div>
+    <div class="skills-grid">
+      <div class="skill-cat"><div class="icon"><i class="ti ti-cpu"></i></div><h3>Robotics & ROS</h3><div class="chips"><span class="chip">ROS 2 Humble/Jazzy</span><span class="chip">MoveIt 2</span><span class="chip">ros2_control</span><span class="chip">URDF / xacro</span><span class="chip">TF2</span><span class="chip">Nav2</span></div></div>
+      <div class="skill-cat"><div class="icon"><i class="ti ti-eye"></i></div><h3>Computer vision</h3><div class="chips"><span class="chip">OpenCV</span><span class="chip">PointCloud2</span><span class="chip">ToF depth</span><span class="chip">Neural nets</span><span class="chip">Hand-eye calib</span><span class="chip">Sensor fusion</span></div></div>
+      <div class="skill-cat"><div class="icon"><i class="ti ti-code"></i></div><h3>Languages & tools</h3><div class="chips"><span class="chip">C++</span><span class="chip">Python</span><span class="chip">colcon</span><span class="chip">Git</span><span class="chip">Docker</span><span class="chip">Linux</span></div></div>
+      <div class="skill-cat"><div class="icon"><i class="ti ti-robot"></i></div><h3>Hardware & integration</h3><div class="chips"><span class="chip">Yaskawa Motoman</span><span class="chip">UR arms</span><span class="chip">LUCID Helios2</span><span class="chip">GigE Vision</span><span class="chip">MotoROS2</span><span class="chip">Gazebo</span></div></div>
+      <div class="skill-cat"><div class="icon"><i class="ti ti-chart-line"></i></div><h3>Simulation & viz</h3><div class="chips"><span class="chip">RViz2</span><span class="chip">Gazebo Harmonic</span><span class="chip">Foxglove</span><span class="chip">PlotJuggler</span><span class="chip">Digital twins</span></div></div>
+      <div class="skill-cat"><div class="icon"><i class="ti ti-school"></i></div><h3>Foundations</h3><div class="chips"><span class="chip">Mechatronics</span><span class="chip">Kinematics</span><span class="chip">Control theory</span><span class="chip">Embedded</span></div></div>
+    </div>
+  </section>
+
+  <section id="experience" class="reveal">
+    <div class="sec-head"><span class="sec-num">03 / experience</span><h2>Where I've worked</h2><div class="line"></div></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="date">Present</div><h3>Robotics Engineer</h3>
+        <div class="org"><span class="at">@</span> RubyAI — Abu Dhabi</div>
+        <p>Leading perception and integration on an AI-powered robotic fuelling pilot at an ADNOC Distribution station. Vehicle data collection, neural-net training for fuel-cap detection and nozzle alignment, and the computer-vision pipeline for a Yaskawa Motoman HC10DTP cobot arm.</p>
+      </div>
+      <div class="tl-item">
+        <div class="date">Prior</div><h3>Robotics Trainer</h3>
+        <div class="org"><span class="at">@</span> Cybersquare / Baabte System Technologies — UAE & India</div>
+        <p>Taught robotics fundamentals and hands-on systems building across both regions, mentoring students through hardware and software projects.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="education" class="reveal">
+    <div class="sec-head"><span class="sec-num">04 / education</span><h2>How I trained</h2><div class="line"></div></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="date">M.Tech</div><h3>Robotics</h3>
+        <div class="org"><span class="at">@</span> Kerala Technical University</div>
+        <p>Advanced study in robotics — kinematics, control, perception, and system design.</p>
+      </div>
+      <div class="tl-item">
+        <div class="date">B.E.</div><h3>Mechatronics Engineering</h3>
+        <div class="org"><span class="at">@</span> Anna University</div>
+        <p>Foundations across mechanical, electronic, and software engineering — the multidisciplinary base for everything I build today.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="reveal">
+    <div class="sec-head"><span class="sec-num">05 / projects</span><h2>Selected work</h2><div class="line"></div></div>
+    <div class="proj-grid" id="projGrid"></div>
+  </section>
+
+  <section id="contact" class="contact reveal">
+    <div class="sec-head" style="text-align:center; margin-bottom:0;"><span class="sec-num">06 / contact</span></div>
+    <h2>Let's build something <span class="accent">real</span>.</h2>
+    <p>I'm open to robotics R&D roles, freelance integration work, and interesting collaborations. Drop me a line.</p>
+    <div class="contact-links">
+      <a href="mailto:dinoopdas15@gmail.com" class="clink"><i class="ti ti-mail"></i> Email</a>
+      <a href="https://github.com/Dinoopdas" class="clink"><i class="ti ti-brand-github"></i> GitHub</a>
+      <a href="https://www.linkedin.com/in/dinoop-n-267905151" class="clink"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>
+      <button class="clink" id="resumeBtn2"><i class="ti ti-download"></i> Resume</button>
+    </div>
+  </section>
+</main>
+
+<footer>Designed & built by Dinoop Das · Abu Dhabi · 2026</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+  const navToggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+
+  /* Theme toggle */
+  const themeBtn = document.getElementById('themeBtn');
+  let dark = true;
+  themeBtn.addEventListener('click', () => {
+    dark = !dark;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    themeBtn.innerHTML = dark ? '<i class="ti ti-sun"></i>' : '<i class="ti ti-moon"></i>';
+  });
+
+  /* Reveal */
+  const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  /* Projects data */
+  const projects = [
+    {
+      icon: 'ti-camera', title: 'Helios2 ROS 2 driver', github: 'https://github.com/Dinoopdas/helios2_ros2',
+      role: 'C++ · Arena SDK · ToF perception',
+      desc: 'A from-scratch C++ ROS 2 package for the LUCID Helios2 ToF depth camera, mounted eye-in-hand on a Motoman HC10DTP.',
+      full: 'Built a complete ROS 2 driver for the LUCID Vision Helios2 time-of-flight depth camera, talking to the Arena SDK directly in C++ rather than relying on a generic wrapper. The package publishes organized point clouds and a mono16 intensity image with BEST_EFFORT QoS, mounted eye-in-hand on the HC10DTP flange.',
+      highlights: [
+        'Organized PointCloud2 (XYZI float32, meters) on /helios2/points',
+        'Direct GigE network config + firewall rules for reliable streaming',
+        'GenICam probe tool to tune accumulation, spatial filtering & flying-pixel removal',
+        'Explicit OpenCV calib3d linking and upstream node patches'
+      ],
+      tags: ['C++', 'Arena SDK', 'PointCloud2', 'GigE', 'ROS 2 Humble']
+    },
+    {
+      icon: 'ti-robot', title: 'UR10e digital twin', github: 'https://github.com/Dinoopdas/ur10e-industrial-digital-twin-ros2',
+      role: 'MoveIt 2 · Gazebo Harmonic · Python',
+      desc: 'A complete pick-and-place digital twin of a UR10e in Gazebo Harmonic with MoveIt 2 motion planning.',
+      full: 'A full industrial digital twin of a Universal Robots UR10e, simulated in Gazebo Harmonic and driven by MoveIt 2 for pick-and-place. The project went beyond a happy-path demo — it required diagnosing and fixing a real concurrency bug to get reliable asynchronous control.',
+      highlights: [
+        'End-to-end pick-and-place pipeline with MoveIt 2',
+        'ros2_control integration in Gazebo Harmonic',
+        'Resolved a MultiThreadedExecutor / ReentrantCallbackGroup deadlock',
+        'Clean, reproducible workspace pushed to GitHub'
+      ],
+      tags: ['MoveIt 2', 'Gazebo', 'Python', 'ros2_control', 'Digital twin']
+    },
+    {
+      icon: 'ti-arrows-exchange', title: 'Motoman ROS 1 → ROS 2 migration', github: 'https://github.com/Dinoopdas',
+      role: 'ROS 2 · URDF · ament_cmake',
+      desc: 'Ported the Motoman HC10 support package from ROS 1 to a clean ROS 2 ament_cmake package for RViz2 visualization.',
+      full: 'Migrated the legacy motoman-noetic-devel ROS 1 package into a clean ROS 2 ament_cmake package (motoman_hc10_support) so the HC10DTP arm could be visualized and built natively in a modern ROS 2 workspace.',
+      highlights: [
+        'Resolved xacro pi-constant conflicts during the port',
+        'Fixed RViz2 plugin loading issues',
+        'Sorted out STL vs DAE mesh coloring',
+        'Foundation for a unified robot description with the camera URDF'
+      ],
+      tags: ['ROS 2', 'URDF', 'RViz2', 'ament_cmake', 'xacro']
+    },
+    {
+      icon: 'ti-gas-station', title: 'Robotic refuelling system', github: null,
+      role: 'Neural nets · HC10DTP · Production',
+      desc: 'Perception and integration work on a certified AI-powered robotic fuelling pilot at an ADNOC Distribution station.',
+      full: 'My core work at RubyAI: the perception and integration layer of an AI-powered robotic refuelling system — described as the first certified robotic refuelling deployment in the region. The system bridges trained vision models to live industrial robot motion in a real-world setting.',
+      highlights: [
+        'Neural-net training for automated fuel-cap detection',
+        'Nozzle alignment using the vision pipeline',
+        'Live cobot control via MotoROS2 on a YRC1000micro controller',
+        'Vehicle data collection and sensor integration'
+      ],
+      tags: ['Neural nets', 'HC10DTP', 'MotoROS2', 'Computer vision', 'Production']
+    }
+  ];
+
+  const grid = document.getElementById('projGrid');
+  projects.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'proj-card';
+    const linkHtml = p.github
+      ? `<a href="${p.github}" class="plink" onclick="event.stopPropagation()"><i class="ti ti-brand-github"></i></a>`
+      : `<span class="plink"><i class="ti ti-lock"></i></span>`;
+    card.innerHTML = `
+      <div class="ptop"><span class="picon"><i class="ti ${p.icon}"></i></span>${linkHtml}</div>
+      <h3>${p.title}</h3>
+      <p class="pdesc">${p.desc}</p>
+      <div class="proj-tags">${p.tags.slice(0,4).map(t => `<span class="chip">${t}</span>`).join('')}</div>
+      <span class="proj-more">View details <i class="ti ti-arrow-right"></i></span>`;
+    card.addEventListener('click', () => openModal(i));
+    grid.appendChild(card);
+  });
+
+  const overlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+  function openModal(i) {
+    const p = projects[i];
+    const linkHtml = p.github
+      ? `<a href="${p.github}" class="modal-link"><i class="ti ti-brand-github"></i> View on GitHub</a>`
+      : `<span class="modal-link" style="background:var(--bg-3);color:var(--muted);cursor:default;box-shadow:none"><i class="ti ti-lock"></i> Proprietary — details on request</span>`;
+    modal.innerHTML = `
+      <div class="modal-top"><span class="modal-icon"><i class="ti ${p.icon}"></i></span><button class="modal-close" id="modalClose"><i class="ti ti-x"></i></button></div>
+      <h3>${p.title}</h3>
+      <div class="m-role">${p.role}</div>
+      <p class="m-body">${p.full}</p>
+      <h4>// highlights</h4>
+      <ul>${p.highlights.map(h => `<li>${h}</li>`).join('')}</ul>
+      <div class="modal-tags">${p.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div>
+      ${linkHtml}`;
+    overlay.classList.add('open');
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+  }
+  function closeModal() { overlay.classList.remove('open'); }
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  /* Resume download — generates a clean text resume on the fly */
+  function downloadResume() {
+    const txt = `DINOOP DAS
+Robotics Engineer — Abu Dhabi, UAE
+dinoopdas15@gmail.com | github.com/Dinoopdas | linkedin.com/in/dinoop-n-267905151
+
+SUMMARY
+Robotics engineer specializing in ROS 2, computer vision, and industrial robot
+integration. Experience deploying production AI-powered robotic systems, from
+neural-net perception to live cobot control.
+
+EXPERIENCE
+Robotics Engineer — RubyAI, Abu Dhabi (Present)
+  - Perception & integration on an AI-powered robotic refuelling pilot at an
+    ADNOC Distribution station (first certified robotic refuelling in the region).
+  - Neural-net training for fuel-cap detection and nozzle alignment.
+  - Computer-vision pipeline & sensor integration for a Yaskawa Motoman HC10DTP.
+
+Robotics Trainer — Cybersquare / Baabte System Technologies, UAE & India
+  - Taught robotics fundamentals and hands-on systems building across regions.
+
+EDUCATION
+M.Tech, Robotics — Kerala Technical University
+B.E., Mechatronics Engineering — Anna University
+
+SKILLS
+ROS 2 (Humble/Jazzy), MoveIt 2, ros2_control, URDF/xacro, TF2, Nav2,
+OpenCV, PointCloud2, ToF depth, neural networks, hand-eye calibration,
+C++, Python, colcon, Git, Docker, Linux,
+Yaskawa Motoman, UR arms, LUCID Helios2, GigE Vision, MotoROS2,
+RViz2, Gazebo Harmonic, Foxglove, PlotJuggler, digital twins.
+
+PROJECTS
+Helios2 ROS 2 driver — from-scratch C++ driver for a LUCID ToF depth camera.
+UR10e digital twin — MoveIt 2 pick-and-place in Gazebo Harmonic.
+Motoman ROS 1 to ROS 2 migration — clean ament_cmake support package.
+`;
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'Dinoop_Das_Resume.txt';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  document.getElementById('resumeBtn').addEventListener('click', downloadResume);
+  document.getElementById('resumeBtn2').addEventListener('click', downloadResume);
+</script>
+</body>
+</html>
