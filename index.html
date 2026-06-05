@@ -263,7 +263,7 @@
     <p class="sub">I design and deploy <span class="hl">ROS 2 systems, computer-vision pipelines, and industrial robot integrations</span> — from neural-net perception to live cobot control on the factory floor.</p>
     <div class="hero-cta">
       <a href="#projects" class="btn btn-primary">View my work <i class="ti ti-arrow-right"></i></a>
-      <button class="btn btn-ghost" id="resumeBtn"><i class="ti ti-download"></i> Download resume</button>
+      <a href="resume.html" target="_blank" rel="noopener" class="btn btn-ghost"><i class="ti ti-file-text"></i> View resume</a>
     </div>
     <div class="hero-stats">
       <div class="hero-stat"><div class="num">5+</div><div class="lbl">years in robotics</div></div>
@@ -348,7 +348,7 @@
       <a href="mailto:dinoopdas15@gmail.com" class="clink"><i class="ti ti-mail"></i> Email</a>
       <a href="https://github.com/Dinoopdas" class="clink"><i class="ti ti-brand-github"></i> GitHub</a>
       <a href="https://www.linkedin.com/in/dinoop-n-267905151" class="clink"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>
-      <button class="clink" id="resumeBtn2"><i class="ti ti-download"></i> Resume</button>
+      <a href="resume.html" target="_blank" rel="noopener" class="clink"><i class="ti ti-file-text"></i> Resume</a>
     </div>
   </section>
 </main>
@@ -476,53 +476,6 @@
   function closeModal() { overlay.classList.remove('open'); }
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  /* Resume download — generates a clean text resume on the fly */
-  function downloadResume() {
-    const txt = `DINOOP DAS
-Robotics Engineer — Abu Dhabi, UAE
-dinoopdas15@gmail.com | github.com/Dinoopdas | linkedin.com/in/dinoop-n-267905151
-
-SUMMARY
-Robotics engineer specializing in ROS 2, computer vision, and industrial robot
-integration. Experience deploying production AI-powered robotic systems, from
-neural-net perception to live cobot control.
-
-EXPERIENCE
-Robotics Engineer — RubyAI, Abu Dhabi (Present)
-  - Perception & integration on an AI-powered robotic refuelling pilot at an
-    ADNOC Distribution station (first certified robotic refuelling in the region).
-  - Neural-net training for fuel-cap detection and nozzle alignment.
-  - Computer-vision pipeline & sensor integration for a Yaskawa Motoman HC10DTP.
-
-Robotics Trainer — Cybersquare / Baabte System Technologies, UAE & India
-  - Taught robotics fundamentals and hands-on systems building across regions.
-
-EDUCATION
-M.Tech, Robotics — Kerala Technical University
-B.E., Mechatronics Engineering — Anna University
-
-SKILLS
-ROS 2 (Humble/Jazzy), MoveIt 2, ros2_control, URDF/xacro, TF2, Nav2,
-OpenCV, PointCloud2, ToF depth, neural networks, hand-eye calibration,
-C++, Python, colcon, Git, Docker, Linux,
-Yaskawa Motoman, UR arms, LUCID Helios2, GigE Vision, MotoROS2,
-RViz2, Gazebo Harmonic, Foxglove, PlotJuggler, digital twins.
-
-PROJECTS
-Helios2 ROS 2 driver — from-scratch C++ driver for a LUCID ToF depth camera.
-UR10e digital twin — MoveIt 2 pick-and-place in Gazebo Harmonic.
-Motoman ROS 1 to ROS 2 migration — clean ament_cmake support package.
-`;
-    const blob = new Blob([txt], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = 'https://dinoopdas.github.io/resume.html'; a.download = '#';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-  document.getElementById('resumeBtn').addEventListener('click', downloadResume);
-  document.getElementById('resumeBtn2').addEventListener('click', downloadResume);
 </script>
 </body>
 </html>
